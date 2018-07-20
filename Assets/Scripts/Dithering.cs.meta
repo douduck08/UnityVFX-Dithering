@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: 35a9d6ceae544c7479b736051cc04988
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - ditherMap: {fileID: 2800000, guid: de83ff0659e8b8e4ca61d224266eb5b8, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
