@@ -27,7 +27,7 @@ namespace DouduckLibEditor {
                     s_ditherMapGenerator = new DitherMapGenerator ();
                 }
                 ditherMapGenerator = s_ditherMapGenerator;
-                ditherMapTexture = ditherMapGenerator.CreateTexture (256);
+                ditherMapTexture = ditherMapGenerator.CreateTexture (16);
 
                 serializedObject = new SerializedObject (this);
                 generatorProperty = serializedObject.FindProperty ("ditherMapGenerator");
@@ -56,6 +56,9 @@ namespace DouduckLibEditor {
                 var size = ditherMapGenerator.dimensions;
                 var tmp = ditherMapGenerator.CreateTexture (size);
                 EditorUtil.SaveAsJPG (tmp, "new dither map texture");
+            }
+            if (GUILayout.Button ("Copy string")) {
+                EditorGUIUtility.systemCopyBuffer = DitherMapGenerator.GetString (ditherMapGenerator.iteration);
             }
             EditorGUILayout.EndHorizontal ();
 

@@ -22,4 +22,8 @@
 
 # Custom
 /Assets/Test/
+/Assets/Test.*
 /Assets/Plugins/
+/Assets/Plugins.*
+/Assets/KizunaAI/
+/Assets/KizunaAI.*

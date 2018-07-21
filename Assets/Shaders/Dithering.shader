@@ -14,6 +14,8 @@
             #pragma multi_compile _ UNITY_COLORSPACE_GAMMA
 
             #include "UnityCG.cginc"
+            #include "Includes/Common.cginc"
+            #include "Includes/Dither.cginc"
 
             struct appdata {
                 float4 vertex : POSITION;
@@ -46,24 +48,12 @@
                 return o;
             }
 
-            inline float getLuma(float3 rgb) {
-                // const float3 lum = float3(0.2126, 0.7152, 0.0722);
-                const float3 lum = float3(0.299, 0.587, 0.114);
-                return dot(rgb, lum);
-            }
-
             float4 frag (v2f i) : SV_Target {
                 UNITY_SETUP_INSTANCE_ID(i);
                 float4 col = UNITY_SAMPLE_SCREENSPACE_TEXTURE(_MainTex, i.uv);
 
-                int x = i.uv.x * _ScreenParams.x;
-                int y = i.uv.y * _ScreenParams.y;
-                x &= 15;
-                y &= 15;
-
-                float value = tex2D(_DitherTex, float2(_DitherTex_TexelSize.x * x, _DitherTex_TexelSize.y * y)).r;
-                clip(i.uv.x - value);
-                // clip(getLuma(col) - value);
+                // clipDitherMap (i.uv, getLuma(col.rgb), _DitherTex, _DitherTex_TexelSize);
+                clipBayerDither (i.uv, getLuma(col.rgb));
                 return 1;
             }
             ENDCG

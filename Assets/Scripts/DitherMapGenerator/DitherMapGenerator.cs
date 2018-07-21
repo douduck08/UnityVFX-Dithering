@@ -5,9 +5,8 @@ using UnityEngine;
 namespace DouduckLib {
     [System.Serializable]
     public class DitherMapGenerator {
-
-        int[] dither2, dither4, dither8, dither16;
-        List<int[]> ditherMatrixs;
+        public static int[] dither2, dither4, dither8, dither16;
+        public static List<int[]> ditherMatrixs;
 
         [SerializeField, Range (0, 3)]
         int _iteration = 0;
@@ -29,10 +28,10 @@ namespace DouduckLib {
         public int matrixSize { get { return _matrixSize; } }
 
         public bool testThreshold = false;
-        [Range (0, 255)]
-        public int threshold = 0;
+        [Range (0f, 1f)]
+        public float threshold = 0f;
 
-        public DitherMapGenerator () {
+        static DitherMapGenerator () {
             dither2 = new int[] { 0, 2, 3, 1 };
 
             int n = 2;
@@ -86,22 +85,35 @@ namespace DouduckLib {
         public void Apply (Texture2D texture) {
             int resolution = texture.width;
             int scale = resolution / dimensions;
+            int valueScale = 256 / matrixSize;
             int[] ditherMatrix = ditherMatrixs[iteration];
             for (int y = 0; y < resolution; y++) {
                 for (int x = 0; x < resolution; x++) {
                     int index = (x / scale) + (y / scale) * dimensions;
-                    float value = (float) ditherMatrix[index] / matrixSize + 0.5f / matrixSize;
+                    int value = ditherMatrix[index] * valueScale;
                     if (testThreshold) {
-                        if (threshold * 1f / 255f > value) {
-                            value = 1;
+                        if (threshold * 256 > value + 0.5f) {
+                            value = 255;
                         } else {
                             value = 0;
                         }
                     }
-                    texture.SetPixel (x, y, new Color (value, value, value));
+                    texture.SetPixel (x, y, new Color32 ((byte) value, (byte) value, (byte) value, 255));
                 }
             }
+
             texture.Apply ();
+        }
+
+        public static string GetString (int index) {
+            var size = ditherMatrixs[index].Length;
+            string str = "{";
+            for (int i = 0; i < size; i++) {
+                if (i > 0) str += ",";
+                str += ditherMatrixs[index][i].ToString ();
+            }
+            str += "}";
+            return str;
         }
     }
 }
