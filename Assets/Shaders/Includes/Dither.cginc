@@ -24,6 +24,13 @@ inline void clipBayerDither (float2 screenPos, float alpha) {
     clip(alpha - value);
 }
 
+inline void clipBayerDither (float2 screenPos, float alpha, float noise) {
+    int x = screenPos.x * _ScreenParams.x;
+    int y = screenPos.y * _ScreenParams.y;
+    fixed value = getDither(x, y) + noise;
+    clip(alpha - value * 0.5);
+}
+
 inline void clipFSDither (float2 screenPos, float alpha) {
     // Fake Floyd‑Steinberg Dither
     int x = screenPos.x * _ScreenParams.x;
